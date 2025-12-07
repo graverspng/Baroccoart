@@ -19,12 +19,14 @@ export default function ServiceDetail({ service }) {
         hero_image: service.hero_image || '',
         images: Array.isArray(service.images) ? [...service.images] : [],
         newImage: '',
+        uploadFiles: null,
     });
 
     const submit = () => {
         patch(route('service.update', service.slug), {
             preserveScroll: true,
             onSuccess: () => setEditing(false),
+            forceFormData: true,
         });
     };
 
@@ -236,6 +238,19 @@ export default function ServiceDetail({ service }) {
                                         placeholder="https://..."
                                         className="min-w-0 flex-1 rounded-2xl border border-white/20 bg-black/40 px-3 py-2 text-white placeholder:text-white/40 focus:border-white focus:ring-2 focus:ring-white/30"
                                     />
+                                    <label className="flex cursor-pointer items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10">
+                                        <span className="text-base">+</span>
+                                        Augšupielādēt
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            multiple
+                                            className="hidden"
+                                            onChange={(e) =>
+                                                setData('uploadFiles', e.target.files)
+                                            }
+                                        />
+                                    </label>
                                     <button
                                         type="button"
                                         onClick={addImage}

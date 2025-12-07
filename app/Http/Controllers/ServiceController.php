@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\ServiceImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ServiceController extends Controller
@@ -60,6 +61,8 @@ class ServiceController extends Controller
             'hero_image' => ['nullable', 'url'],
             'images' => ['array'],
             'images.*' => ['url'],
+            'uploadFiles' => ['array'],
+            'uploadFiles.*' => ['file', 'image', 'max:5120'],
         ]);
 
         $bodyLines = collect(explode("\n", $validated['body']))
@@ -68,17 +71,31 @@ class ServiceController extends Controller
             ->values()
             ->all();
 
-        DB::transaction(function () use ($service, $validated, $bodyLines) {
+        $images = $validated['images'] ?? [];
+
+        if (! empty($validated['uploadFiles'])) {
+            foreach ($validated['uploadFiles'] as $file) {
+                $path = $file->store('service-images', 'public');
+                $images[] = Storage::disk('public')->url($path);
+            }
+        }
+
+        DB::transaction(function () use ($service, $validated, $bodyLines, $images) {
+            $heroImage = $validated['hero_image'] ?? null;
+            if (! $heroImage && count($images)) {
+                $heroImage = $images[0];
+            }
+
             $service->update([
                 'label' => $validated['label'],
                 'heading' => $validated['heading'],
                 'body' => $bodyLines,
-                'hero_image' => $validated['hero_image'] ?? null,
+                'hero_image' => $heroImage,
             ]);
 
-            if (array_key_exists('images', $validated)) {
+            if ($images !== null) {
                 $service->images()->delete();
-                foreach ($validated['images'] as $url) {
+                foreach ($images as $url) {
                     $service->images()->create(['url' => $url]);
                 }
             }
