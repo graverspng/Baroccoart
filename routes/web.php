@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', fn () => Inertia::render('Welcome'));
 
-Route::get('/services', fn () => Inertia::render('Services'))->name('services');
+Route::get('/services', [ServiceController::class, 'index'])->name('services');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('service.detail');
+Route::patch('/services/{slug}', [ServiceController::class, 'update'])->middleware('auth')->name('service.update');
 
 Route::get('/contact', fn () => Inertia::render('Contact'))->name('contact');
 

@@ -2,32 +2,36 @@ import { Head, Link } from '@inertiajs/react';
 
 const gallery = [
     {
-        src: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=80',
-        alt: 'Modern hillside home with panoramic glass',
+        src: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80',
+        alt: 'Modern residence with glass facade at dusk',
+        label: 'Celtniecība',
+        blurb: 'Realizējam ēkas no koncepta līdz nodošanai ekspluatācijā.',
+        href: route('service.detail', 'celtnieciba'),
     },
     {
-        src: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=1400&q=80',
-        alt: 'Sunlit agricultural hall stacked with hay bales',
+        src: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=1600&q=80',
+        alt: 'Industrial hall filled with natural light',
+        label: 'Projektēšana',
+        blurb: 'Pilns projektēšanas serviss – arhitektūra, inženierija, autoruzraudzība.',
+        href: route('service.detail', 'projektesana'),
     },
     {
-        src: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1400&q=80',
-        alt: 'Sharp-lined concrete residence at dusk',
+        src: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80',
+        alt: 'Interior corridor with soft natural light',
+        label: 'Interjera dizains',
+        blurb: 'Interjeri ar gaismu, faktūrām un precīzām līnijām.',
+        href: route('service.detail', 'interjera-dizains'),
     },
     {
-        src: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80',
-        alt: 'Tall glass atrium filled with soft light',
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1400&q=80',
-        alt: 'Minimalist staircase inside a gallery space',
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80',
-        alt: 'Large open warehouse prepared for installations',
+        src: 'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80',
+        alt: 'Minimalist staircase and built-in furniture',
+        label: 'Mēbeles',
+        blurb: 'Pielāgoti mēbeļu risinājumi, kas iederas telpas arhitektūrā.',
+        href: route('service.detail', 'mebeles'),
     },
 ];
 
-export default function Welcome() {
+export default function Welcome({ auth }) {
     return (
         <>
             <Head title="Barocco Art" />
@@ -39,23 +43,53 @@ export default function Welcome() {
                         </span>
                         <nav className="flex items-center gap-4 text-sm text-white/80 md:gap-8">
                             <Link
+                                href={`${route('services')}#celtnieciba`}
+                                className="transition hover:text-white"
+                            >
+                                Celtniecība
+                            </Link>
+                            <Link
+                                href={`${route('services')}#projektesana`}
+                                className="transition hover:text-white"
+                            >
+                                Projektēšana
+                            </Link>
+                            <Link
+                                href={`${route('services')}#interjera-dizains`}
+                                className="transition hover:text-white"
+                            >
+                                Interjera dizains
+                            </Link>
+                            <Link
+                                href={`${route('services')}#mebeles`}
+                                className="transition hover:text-white"
+                            >
+                                Mēbeles
+                            </Link>
+                            <Link
                                 href={route('contact')}
                                 className="transition hover:text-white"
                             >
                                 Kontakti
                             </Link>
-                            <Link
-                                href={route('services')}
-                                className="transition hover:text-white"
-                            >
-                                Pakalpojumi
-                            </Link>
-                            <Link
-                                href={route('login')}
-                                className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                            >
-                                Owner Login
-                            </Link>
+                            {!auth?.user && (
+                                <Link
+                                    href={route('login')}
+                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
+                                >
+                                    Owner Login
+                                </Link>
+                            )}
+                            {auth?.user && (
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
+                                >
+                                    Izrakstīties
+                                </Link>
+                            )}
                         </nav>
                     </header>
 
@@ -74,21 +108,31 @@ export default function Welcome() {
 
                     <section className="grid grid-cols-1 gap-8 md:grid-cols-2">
                         {gallery.map((item, index) => (
-                            <figure
-                                key={item.alt}
-                                className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl transition duration-300 hover:-translate-y-1 hover:border-white/30 fade-in-up"
+                            <Link
+                                href={item.href}
+                                className="group"
                                 style={{ animationDelay: `${index * 0.08}s` }}
                             >
-                                <img
-                                    src={item.src}
-                                    alt={item.alt}
-                                    className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
-                                    loading="lazy"
-                                />
-                                <figcaption className="sr-only">
-                                    {item.alt}
-                                </figcaption>
-                            </figure>
+                                <figure className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl transition duration-300 hover:-translate-y-1 hover:border-white/30 fade-in-up">
+                                    <img
+                                        src={item.src}
+                                        alt={item.alt}
+                                        className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
+                                        loading="lazy"
+                                    />
+                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+                                    <figcaption className="pointer-events-none absolute inset-0 flex items-end p-6 opacity-0 transition duration-300 group-hover:opacity-100">
+                                        <div className="space-y-1">
+                                            <p className="text-xs uppercase tracking-[0.3em] text-white/80">
+                                                {item.label}
+                                            </p>
+                                            <p className="text-lg font-semibold text-white">
+                                                {item.blurb}
+                                            </p>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </Link>
                         ))}
                     </section>
 
@@ -194,12 +238,14 @@ export default function Welcome() {
                                 skatās brīvi.
                             </p>
                         </div>
-                        <Link
-                            href={route('login')}
-                            className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
-                        >
-                            Owner Login
-                        </Link>
+                        {!auth?.user && (
+                            <Link
+                                href={route('login')}
+                                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+                            >
+                                Owner Login
+                            </Link>
+                        )}
                     </section>
 
                     <footer className="mt-10 text-xs text-white/50">

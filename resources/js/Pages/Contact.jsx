@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 
 const sections = [
     {
@@ -39,23 +39,53 @@ export default function Contact() {
                         </Link>
                         <nav className="flex items-center gap-4 text-sm text-white/80 md:gap-8">
                             <Link
+                                href={`${route('services')}#celtnieciba`}
+                                className="transition hover:text-white"
+                            >
+                                Celtniecība
+                            </Link>
+                            <Link
+                                href={`${route('services')}#projektesana`}
+                                className="transition hover:text-white"
+                            >
+                                Projektēšana
+                            </Link>
+                            <Link
+                                href={`${route('services')}#interjera-dizains`}
+                                className="transition hover:text-white"
+                            >
+                                Interjera dizains
+                            </Link>
+                            <Link
+                                href={`${route('services')}#mebeles`}
+                                className="transition hover:text-white"
+                            >
+                                Mēbeles
+                            </Link>
+                            <Link
                                 href={route('contact')}
                                 className="transition hover:text-white"
                             >
                                 Kontakti
                             </Link>
-                            <Link
-                                href={route('services')}
-                                className="transition hover:text-white"
-                            >
-                                Pakalpojumi
-                            </Link>
-                            <Link
-                                href={route('login')}
-                                className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                            >
-                                Owner Login
-                            </Link>
+                            {!usePage().props.auth?.user && (
+                                <Link
+                                    href={route('login')}
+                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
+                                >
+                                    Owner Login
+                                </Link>
+                            )}
+                            {usePage().props.auth?.user && (
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
+                                >
+                                    Izrakstīties
+                                </Link>
+                            )}
                         </nav>
                     </header>
 

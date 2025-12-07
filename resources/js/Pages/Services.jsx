@@ -1,33 +1,8 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 
-const services = [
-    {
-        title: 'PROJEKTĒŠANA',
-        body: 'Stūdija izstrādā daudzdzīvokļu ēku projektus, sabiedrisku un biroju ēku būvprojektus. Realizēti arī viesnīcu un skolu projekti.',
-        image:
-            'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=1400&q=80',
-    },
-    {
-        title: 'BŪVNORMATĪVI UN TERITORIJAS PLĀNOŠANAS NOTEIKUMI',
-        body: 'Kompetence valsts un pašvaldību būvniecību reglamentējošā likumdošanā. Būvatļaujas izsniegšanas process, būvniecība un ēkas nodošana ekspluatācijā. Sertificēta būvprojektu ekspertīze.',
-        image:
-            'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=80',
-    },
-    {
-        title: 'PROJEKTU VADĪBA',
-        body: 'Pieredze sarežģītu būvniecības projektu vadībā, no koncepcijas līdz būves nodošanai ekspluatācijā.',
-        image:
-            'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1400&q=80',
-    },
-    {
-        title: 'ĒKAS INFORMĀCIJAS MODELĒŠANA',
-        body: 'BIM 3D modelēšana, kas nodrošina sadarbību starp visām ieinteresētajām pusēm, uzlabo efektivitāti un samazina kļūdas būvniecības laikā.',
-        image:
-            'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1400&q=80',
-    },
-];
+export default function Services({ services = [] }) {
+    const { auth } = usePage().props;
 
-export default function Services() {
     return (
         <>
             <Head title="Pakalpojumi" />
@@ -41,24 +16,39 @@ export default function Services() {
                             Barocco Art
                         </Link>
                         <nav className="flex items-center gap-4 text-sm text-white/80 md:gap-8">
-                            <Link
-                                href={route('contact')}
-                                className="transition hover:text-white"
-                            >
+                            <Link href={`${route('services')}#celtnieciba`} className="transition hover:text-white">
+                                Celtniecība
+                            </Link>
+                            <Link href={`${route('services')}#projektesana`} className="transition hover:text-white">
+                                Projektēšana
+                            </Link>
+                            <Link href={`${route('services')}#interjera-dizains`} className="transition hover:text-white">
+                                Interjera dizains
+                            </Link>
+                            <Link href={`${route('services')}#mebeles`} className="transition hover:text-white">
+                                Mēbeles
+                            </Link>
+                            <Link href={route('contact')} className="transition hover:text-white">
                                 Kontakti
                             </Link>
-                            <Link
-                                href={route('services')}
-                                className="transition hover:text-white"
-                            >
-                                Pakalpojumi
-                            </Link>
-                            <Link
-                                href={route('login')}
-                                className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                            >
-                                Owner Login
-                            </Link>
+                            {!auth?.user && (
+                                <Link
+                                    href={route('login')}
+                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
+                                >
+                                    Owner Login
+                                </Link>
+                            )}
+                            {auth?.user && (
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
+                                >
+                                    Izrakstīties
+                                </Link>
+                            )}
                         </nav>
                     </header>
 
@@ -70,14 +60,15 @@ export default function Services() {
                             Pakalpojumi
                         </h1>
                         <p className="mx-auto mt-4 max-w-3xl text-white/70 fade-in-up-delayed">
-                            No idejas līdz nodošanai ekspluatācijā – pārraugām katru soli ar BIM 3D modelēšanu, ekspertīzi un projektu vadību.
+                            Arhitektūras daļa, ģenplāns, būvkonstrukcijas, inženiertehniskie tīkli un autoruzraudzība vienotā komandā.
                         </p>
                     </section>
 
-                    <section className="space-y-20">
+                    <section className="space-y-14">
                         {services.map((item, index) => (
                             <div
-                                key={item.title}
+                                key={item.slug}
+                                id={item.slug}
                                 className={`grid gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur md:grid-cols-2 ${
                                     index % 2 ? 'md:grid-flow-col-dense' : ''
                                 } fade-in-up`}
@@ -85,14 +76,21 @@ export default function Services() {
                             >
                                 <div className="flex flex-col justify-center space-y-3">
                                     <p className="text-sm uppercase tracking-[0.2em] text-white/60">
-                                        {item.title}
+                                        {item.label}
                                     </p>
-                                    <p className="text-white/80">{item.body}</p>
+                                    <h2 className="text-2xl font-semibold">{item.heading}</h2>
+                                    <p className="text-white/80">{(item.body || [])[0]}</p>
+                                    <Link
+                                        href={route('service.detail', item.slug)}
+                                        className="text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                                    >
+                                        Lasīt vairāk
+                                    </Link>
                                 </div>
                                 <div className="overflow-hidden rounded-2xl border border-white/10">
                                     <img
-                                        src={item.image}
-                                        alt={item.title}
+                                        src={item.hero_image}
+                                        alt={item.heading}
                                         className="aspect-[4/3] w-full object-cover transition duration-500 hover:scale-105"
                                         loading="lazy"
                                     />
