@@ -197,8 +197,7 @@ export default function Welcome({ auth, services = [] }) {
                     </section>
 
                     <footer className="mt-10 text-xs text-white/50 fade-in-up" style={{ animationDelay: '0.35s' }}>
-                        © 2025 Barocco Art. Atvērta apskate visiem
-                        apmeklētājiem.
+                        © 2025 Barocco Art.
                     </footer>
                 </div>
             </div>
