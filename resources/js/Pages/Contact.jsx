@@ -89,7 +89,7 @@ export default function Contact() {
                         </nav>
                     </header>
 
-                    <section className="py-6 text-center md:py-10">
+                    <section className="py-6 text-center md:py-10 slide-pop" style={{ animationDelay: '0.05s' }}>
                         <p className="text-sm uppercase tracking-[0.2em] text-white/60 fade-in-up">
                             Projektēšanas birojs BAROCCO ART
                         </p>
@@ -106,8 +106,8 @@ export default function Contact() {
                         {sections.map((item, index) => (
                             <div
                                 key={item.title}
-                                className="flex h-full flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur fade-in-up"
-                                style={{ animationDelay: `${index * 0.1}s` }}
+                                className="flex h-full flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur slide-pop"
+                                style={{ animationDelay: `${0.1 + index * 0.08}s` }}
                             >
                                 <p className="text-sm uppercase tracking-[0.2em] text-white/60">
                                     {item.title}
@@ -141,7 +141,7 @@ export default function Contact() {
                         ))}
                     </section>
 
-                    <section className="mt-10 flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-8 md:flex-row md:items-center md:justify-between">
+                    <section className="mt-10 flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-8 md:flex-row md:items-center md:justify-between slide-pop" style={{ animationDelay: `${0.4 + sections.length * 0.08}s` }}>
                         <div className="space-y-2">
                             <p className="text-sm uppercase tracking-[0.2em] text-white/60">
                                 Sazināties

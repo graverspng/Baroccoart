@@ -1,43 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
 
-const gallery = [
-    {
-        src: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80',
-        alt: 'Modern residence with glass facade at dusk',
-        label: 'Celtniecība',
-        blurb: 'Realizējam ēkas no koncepta līdz nodošanai ekspluatācijā.',
-        href: route('service.detail', 'celtnieciba'),
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1473186578172-c141e6798cf4?auto=format&fit=crop&w=1600&q=80',
-        alt: 'Industrial hall filled with natural light',
-        label: 'Projektēšana',
-        blurb: 'Pilns projektēšanas serviss – arhitektūra, inženierija, autoruzraudzība.',
-        href: route('service.detail', 'projektesana'),
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80',
-        alt: 'Interior corridor with soft natural light',
-        label: 'Interjera dizains',
-        blurb: 'Interjeri ar gaismu, faktūrām un precīzām līnijām.',
-        href: route('service.detail', 'interjera-dizains'),
-    },
-    {
-        src: 'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80',
-        alt: 'Minimalist staircase and built-in furniture',
-        label: 'Mēbeles',
-        blurb: 'Pielāgoti mēbeļu risinājumi, kas iederas telpas arhitektūrā.',
-        href: route('service.detail', 'mebeles'),
-    },
-];
-
-export default function Welcome({ auth }) {
+export default function Welcome({ auth, services = [] }) {
     return (
         <>
             <Head title="Barocco Art" />
             <div className="min-h-screen bg-[#050505] text-white">
                 <div className="mx-auto flex max-w-6xl flex-col px-6 pb-16 md:pb-24">
-                    <header className="flex items-center justify-between py-6">
+                    <header className="flex items-center justify-between py-6 fade-in-up">
                         <span className="text-lg font-semibold tracking-tight">
                             Barocco Art
                         </span>
@@ -93,7 +62,7 @@ export default function Welcome({ auth }) {
                         </nav>
                     </header>
 
-                    <section className="py-8 text-center md:py-12">
+                    <section className="py-8 text-center md:py-12 slide-pop">
                         <h1 className="text-4xl font-semibold tracking-tight md:text-5xl fade-in-up">
                             Barocco Art
                         </h1>
@@ -107,16 +76,16 @@ export default function Welcome({ auth }) {
                     </section>
 
                     <section className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                        {gallery.map((item, index) => (
+                        {(services || []).map((item, index) => (
                             <Link
-                                href={item.href}
-                                className="group"
-                                style={{ animationDelay: `${index * 0.08}s` }}
+                                key={item.slug}
+                                href={route('service.detail', item.slug)}
+                                className="group slide-pop"
                             >
                                 <figure className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl transition duration-300 hover:-translate-y-1 hover:border-white/30 fade-in-up">
                                     <img
-                                        src={item.src}
-                                        alt={item.alt}
+                                        src={item.hero_image}
+                                        alt={item.label}
                                         className="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
                                         loading="lazy"
                                     />
@@ -138,7 +107,7 @@ export default function Welcome({ auth }) {
 
                     <section
                         id="services"
-                        className="mt-14 grid gap-8 rounded-3xl border border-white/10 bg-white/5 p-8 md:grid-cols-2"
+                        className="mt-14 grid gap-8 rounded-3xl border border-white/10 bg-white/5 p-8 md:grid-cols-2 slide-pop"
                     >
                         <div className="space-y-3">
                             <p className="text-sm uppercase tracking-[0.2em] text-white/60">
@@ -197,7 +166,7 @@ export default function Welcome({ auth }) {
 
                     <section
                         id="contact"
-                        className="mt-10 flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-8 md:flex-row md:items-center md:justify-between"
+                        className="mt-10 flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-8 md:flex-row md:items-center md:justify-between slide-pop"
                     >
                         <div className="space-y-2">
                             <p className="text-sm uppercase tracking-[0.2em] text-white/60">
@@ -227,28 +196,7 @@ export default function Welcome({ auth }) {
                         </div>
                     </section>
 
-                    <section className="mt-8 flex flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 p-6 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <p className="text-sm font-semibold">
-                                Īpašnieka zona
-                            </p>
-                            <p className="text-sm text-white/70">
-                                Pieslēdzies, lai atjaunotu saturu vai pievienotu
-                                jaunus projektus. Pārējie apmeklētāji lapu
-                                skatās brīvi.
-                            </p>
-                        </div>
-                        {!auth?.user && (
-                            <Link
-                                href={route('login')}
-                                className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
-                            >
-                                Owner Login
-                            </Link>
-                        )}
-                    </section>
-
-                    <footer className="mt-10 text-xs text-white/50">
+                    <footer className="mt-10 text-xs text-white/50 fade-in-up" style={{ animationDelay: '0.35s' }}>
                         © 2025 Barocco Art. Atvērta apskate visiem
                         apmeklētājiem.
                     </footer>

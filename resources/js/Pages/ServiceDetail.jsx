@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 export default function ServiceDetail({ service }) {
     const { auth } = usePage().props;
     const isOwner = auth?.user?.is_owner;
+    const [previewUploads, setPreviewUploads] = useState([]);
+    const [heroPreview, setHeroPreview] = useState('');
     const [editing, setEditing] = useState(false);
 
     const {
@@ -19,22 +21,36 @@ export default function ServiceDetail({ service }) {
         hero_image: service.hero_image || '',
         images: Array.isArray(service.images) ? [...service.images] : [],
         newImage: '',
-        uploadFiles: null,
+        uploadFiles: [],
+        hero_file: null,
     });
+
+    const displayImages = useMemo(() => {
+        const list = [...(data.images || [])];
+        if (heroPreview) {
+            list.unshift(heroPreview);
+        }
+        return [...list, ...previewUploads];
+    }, [data.images, previewUploads, heroPreview]);
 
     const submit = () => {
         patch(route('service.update', service.slug), {
             preserveScroll: true,
-            onSuccess: () => setEditing(false),
+            onSuccess: () => {
+                setEditing(false);
+                setPreviewUploads([]);
+                setHeroPreview('');
+            },
             forceFormData: true,
         });
     };
 
     const heroSrc = useMemo(() => {
+        if (heroPreview) return heroPreview;
         if (data.hero_image) return data.hero_image;
-        if (data.images && data.images.length) return data.images[0];
+        if (displayImages.length) return displayImages[0];
         return '';
-    }, [data.hero_image, data.images]);
+    }, [data.hero_image, displayImages, heroPreview]);
 
     const addImage = () => {
         if (!data.newImage.trim()) return;
@@ -43,10 +59,38 @@ export default function ServiceDetail({ service }) {
     };
 
     const removeImage = (url) => {
+        if (url === heroPreview) {
+            setHeroPreview('');
+            setData('hero_file', null);
+        }
+
         setData(
             'images',
-            (data.images || []).filter((img) => img !== url),
+            (data.images || []).filter((img) => img !== url && !url.startsWith('blob:')),
         );
+
+        setPreviewUploads((prev) => prev.filter((img) => img !== url));
+
+        if (url.startsWith('blob:')) {
+            setData('uploadFiles', []);
+        }
+    };
+
+    const handleFileSelect = (files) => {
+        if (!files || !files.length) return;
+        const nextFiles = Array.from(files);
+        setData('uploadFiles', [ ...(data.uploadFiles || []), ...nextFiles ]);
+        setPreviewUploads([
+            ...previewUploads,
+            ...nextFiles.map((file) => URL.createObjectURL(file)),
+        ]);
+    };
+
+    const handleHeroFile = (files) => {
+        if (!files || !files.length) return;
+        const file = files[0];
+        setData('hero_file', file);
+        setHeroPreview(URL.createObjectURL(file));
     };
 
     return (
@@ -197,12 +241,29 @@ export default function ServiceDetail({ service }) {
                                 <label className="text-xs uppercase tracking-[0.2em] text-white/60">
                                     Galvenais attēls (URL)
                                 </label>
-                                <input
-                                    type="url"
-                                    value={data.hero_image}
-                                    onChange={(e) => setData('hero_image', e.target.value)}
-                                    className="w-full rounded-2xl border border-white/20 bg-black/40 px-3 py-2 text-white placeholder:text-white/40 focus:border-white focus:ring-2 focus:ring-white/30"
-                                />
+                                <div className="flex flex-wrap gap-2">
+                                    <input
+                                        type="url"
+                                        value={data.hero_image}
+                                        onChange={(e) => {
+                                            setHeroPreview('');
+                                            setData('hero_file', null);
+                                            setData('hero_image', e.target.value);
+                                        }}
+                                        placeholder="https://..."
+                                        className="min-w-0 flex-1 rounded-2xl border border-white/20 bg-black/40 px-3 py-2 text-white placeholder:text-white/40 focus:border-white focus:ring-2 focus:ring-white/30"
+                                    />
+                                    <label className="flex cursor-pointer items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10">
+                                        <span className="text-base">+</span>
+                                        Augšupielādēt
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => handleHeroFile(e.target.files || [])}
+                                        />
+                                    </label>
+                                </div>
                             </div>
 
                             <div className="space-y-2">
@@ -247,7 +308,7 @@ export default function ServiceDetail({ service }) {
                                             multiple
                                             className="hidden"
                                             onChange={(e) =>
-                                                setData('uploadFiles', e.target.files)
+                                                handleFileSelect(e.target.files || [])
                                             }
                                         />
                                     </label>

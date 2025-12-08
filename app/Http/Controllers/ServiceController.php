@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\ServiceImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -52,6 +53,21 @@ class ServiceController extends Controller
         $user = $request->user();
         abort_unless($user && $user->is_owner, 403);
 
+        $cleanImages = collect($request->input('images', []))
+            ->filter(fn ($url) => is_string($url) && $url !== '' && ! str_starts_with($url, 'blob:'))
+            ->values()
+            ->all();
+
+        $heroImageInput = $request->filled('hero_image') ? $request->hero_image : null;
+        if ($heroImageInput && str_starts_with($heroImageInput, 'blob:')) {
+            $heroImageInput = null;
+        }
+
+        $request->merge([
+            'hero_image' => $heroImageInput,
+            'images' => $cleanImages,
+        ]);
+
         $service = Service::where('slug', $slug)->firstOrFail();
 
         $validated = $request->validate([
@@ -59,10 +75,11 @@ class ServiceController extends Controller
             'heading' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'hero_image' => ['nullable', 'url'],
+            'hero_file' => ['nullable', 'image', 'max:5120'],
             'images' => ['array'],
             'images.*' => ['url'],
             'uploadFiles' => ['array'],
-            'uploadFiles.*' => ['file', 'image', 'max:5120'],
+            'uploadFiles.*' => ['nullable', 'image', 'max:5120'],
         ]);
 
         $bodyLines = collect(explode("\n", $validated['body']))
@@ -72,16 +89,24 @@ class ServiceController extends Controller
             ->all();
 
         $images = $validated['images'] ?? [];
+        $uploadedFiles = collect(Arr::wrap($request->file('uploadFiles', [])))
+            ->flatten()
+            ->filter()
+            ->all();
 
-        if (! empty($validated['uploadFiles'])) {
-            foreach ($validated['uploadFiles'] as $file) {
+        if (! empty($uploadedFiles)) {
+            foreach ($uploadedFiles as $file) {
                 $path = $file->store('service-images', 'public');
-                $images[] = Storage::disk('public')->url($path);
+                $images[] = Storage::url($path);
             }
         }
 
-        DB::transaction(function () use ($service, $validated, $bodyLines, $images) {
-            $heroImage = $validated['hero_image'] ?? null;
+        DB::transaction(function () use ($service, $validated, $bodyLines, $images, $request) {
+            $heroImage = $validated['hero_image'] ?? $service->hero_image;
+            if ($request->file('hero_file')) {
+                $heroImage = Storage::url($request->file('hero_file')->store('service-images', 'public'));
+                $images[] = $heroImage;
+            }
             if (! $heroImage && count($images)) {
                 $heroImage = $images[0];
             }
@@ -101,6 +126,6 @@ class ServiceController extends Controller
             }
         });
 
-        return redirect()->back()->with('success', 'Pakalpojums atjaunots.');
+        return redirect()->route('service.detail', $slug)->with('success', 'Pakalpojums atjaunots.');
     }
 }

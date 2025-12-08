@@ -14,10 +14,35 @@
 }
 
 .fade-in-up {
-    animation: fade-in-up 0.7s ease-out forwards;
+    animation: fade-in-up 1s ease-out forwards;
+    animation-fill-mode: both;
 }
 
 .fade-in-up-delayed {
-    animation: fade-in-up 0.9s ease-out forwards;
-    animation-delay: 0.15s;
+    animation: fade-in-up 1.8s ease-out forwards;
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
+}
+
+@keyframes slide-pop {
+    0% {
+        opacity: 0;
+        transform: translateY(32px) scale(0.97);
+        filter: blur(6px);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.slide-pop {
+    animation: slide-pop 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-fill-mode: both;
 }

@@ -2,10 +2,30 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', fn () => Inertia::render('Welcome'));
+Route::get('/', function () {
+    $services = Service::orderBy('id')
+        ->take(4)
+        ->get()
+        ->map(function ($service) {
+            $body = is_array($service->body) ? $service->body : [];
+            $blurb = $body[0] ?? '';
+
+            return [
+                'slug' => $service->slug,
+                'label' => $service->label,
+                'blurb' => $blurb,
+                'hero_image' => $service->hero_image,
+            ];
+        });
+
+    return Inertia::render('Welcome', [
+        'services' => $services,
+    ]);
+});
 
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('service.detail');
