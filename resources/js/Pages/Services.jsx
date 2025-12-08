@@ -3,6 +3,21 @@ import { Head, Link, usePage } from '@inertiajs/react';
 export default function Services({ services = [] }) {
     const { auth } = usePage().props;
 
+    const renderLine = (line) => {
+        if (!line) return '';
+        const parts = line.split(/[-–]/);
+        if (parts.length > 1) {
+            const [lead, ...rest] = parts;
+            return (
+                <>
+                    <strong className="font-semibold">{lead.trim()}</strong>
+                    {` –${rest.join('–')}`}
+                </>
+            );
+        }
+        return line;
+    };
+
     return (
         <>
             <Head title="Pakalpojumi" />
@@ -79,7 +94,9 @@ export default function Services({ services = [] }) {
                                         {item.label}
                                     </p>
                                     <h2 className="text-2xl font-semibold">{item.heading}</h2>
-                                    <p className="text-white/80">{(item.body || [])[0]}</p>
+                                    <p className="text-white/80">
+                                        {renderLine((item.body || [])[0] || '')}
+                                    </p>
                                     <Link
                                         href={route('service.detail', item.slug)}
                                         className="text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"

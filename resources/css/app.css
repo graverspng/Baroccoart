@@ -2,6 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'SF Pro Display';
+    src:
+        url('/storage/Font/sf-pro-display/SFPRODISPLAYREGULAR.OTF')
+            format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src:
+        url('/storage/Font/sf-pro-display/SFPRODISPLAYMEDIUM.OTF')
+            format('opentype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src:
+        url('/storage/Font/sf-pro-display/SFPRODISPLAYSEMIBOLDITALIC.OTF')
+            format('opentype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SF Pro Display';
+    src:
+        url('/storage/Font/sf-pro-display/SFPRODISPLAYBOLD.OTF')
+            format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 20px;
+    line-height: 1.6;
+}
+
+:root {
+    --font-sans: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+
 @keyframes fade-in-up {
     from {
         opacity: 0;

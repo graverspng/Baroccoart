@@ -66,7 +66,7 @@ export default function Welcome({ auth, services = [] }) {
                         <h1 className="text-4xl font-semibold tracking-tight md:text-5xl fade-in-up">
                             Barocco Art
                         </h1>
-                        <p className="mx-auto mt-4 max-w-3xl text-base text-white/70 md:text-lg fade-in-up-delayed">
+                        <p className="mx-auto mt-4 max-w-3xl text-lg text-white/70 md:text-xl fade-in-up-delayed">
                             Mūsdienīga arhitektūra, tīras līnijas un telpas, kas
                             atdzīvojas gaismā. Barocco Art kolekcijā
                             apvienojam privātmājas, industriālos risinājumus un
@@ -125,38 +125,38 @@ export default function Welcome({ auth, services = [] }) {
                             </p>
                         </div>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
-                                <p className="text-lg font-semibold">
+                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                                <p className="text-xl font-semibold">
                                     Dzīvojamās mājas
                                 </p>
-                                <p className="mt-2 text-sm text-white/70">
+                                <p className="mt-2 text-base text-white/70">
                                     Individuāli risinājumi ar ērtām plānojuma
                                     līnijām un plašu stiklojumu.
                                 </p>
                             </div>
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
-                                <p className="text-lg font-semibold">
+                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                                <p className="text-xl font-semibold">
                                     Industriālie objekti
                                 </p>
-                                <p className="mt-2 text-sm text-white/70">
+                                <p className="mt-2 text-base text-white/70">
                                     Noliktavas, ražotnes un angāri ar
                                     optimizētu dienasgaismu un loģistiku.
                                 </p>
                             </div>
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
-                                <p className="text-lg font-semibold">
+                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                                <p className="text-xl font-semibold">
                                     Interjera dizains
                                 </p>
-                                <p className="mt-2 text-sm text-white/70">
+                                <p className="mt-2 text-base text-white/70">
                                     Minimālisma valoda, kas izceļ materiālu
                                     faktūru un gaismu.
                                 </p>
                             </div>
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
-                                <p className="text-lg font-semibold">
+                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                                <p className="text-xl font-semibold">
                                     Konsultācijas
                                 </p>
-                                <p className="mt-2 text-sm text-white/70">
+                                <p className="mt-2 text-base text-white/70">
                                     Projekta stratēģija, budžeta un materiālu
                                     izvēles sesijas.
                                 </p>

@@ -7,10 +7,6 @@
         <title inertia>{{ config('app.name', 'Barocco Art') }}</title>
         <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000000'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-family='Arial, sans-serif' font-size='28' fill='%23ffffff'%3EB%3C/text%3E%3C/svg%3E">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
         <!-- Scripts -->
         @routes
         @viteReactRefresh

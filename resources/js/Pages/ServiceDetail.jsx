@@ -25,6 +25,21 @@ export default function ServiceDetail({ service }) {
         hero_file: null,
     });
 
+    const renderLine = (line) => {
+        if (!line) return null;
+        const parts = line.split(/[-–]/);
+        if (parts.length > 1) {
+            const [lead, ...rest] = parts;
+            return (
+                <>
+                    <strong className="font-semibold text-white">{lead.trim()}</strong>
+                    {` –${rest.join('–')}`}
+                </>
+            );
+        }
+        return line;
+    };
+
     const displayImages = useMemo(() => {
         const list = [...(data.images || [])];
         if (heroPreview) {
@@ -212,7 +227,9 @@ export default function ServiceDetail({ service }) {
                                         .split('\n')
                                         .map((line) => line.trim())
                                         .filter(Boolean)
-                                        .map((line) => <p key={line}>{line}</p>)
+                                        .map((line) => (
+                                            <p key={line}>{renderLine(line)}</p>
+                                        ))
                                 )}
                             </div>
                         </div>
