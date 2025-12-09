@@ -97,14 +97,6 @@ export default function Login({ status, canResetPassword }) {
                             />
                             <span>Atcerēties mani</span>
                         </label>
-                        {canResetPassword && (
-                            <Link
-                                href={route('password.request')}
-                                className="font-semibold text-white hover:text-white/80"
-                            >
-                                Aizmirsi paroli?
-                            </Link>
-                        )}
                     </div>
 
                     <button
