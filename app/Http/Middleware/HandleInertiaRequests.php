@@ -34,6 +34,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'ownerPassword' => $request->user() && $request->user()->is_owner ? [
+                'locked' => (bool) $request->user()->password_locked_at,
+                'needsSet' => ! (bool) $request->user()->password_locked_at,
+            ] : null,
         ];
     }
 }

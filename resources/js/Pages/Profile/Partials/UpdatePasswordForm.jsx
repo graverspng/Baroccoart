@@ -3,10 +3,14 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { useRef } from 'react';
 
 export default function UpdatePasswordForm({ className = '' }) {
+    const { auth, ownerPassword } = usePage().props;
+    const isOwner = auth?.user?.is_owner;
+    const ownerLocked = ownerPassword?.locked;
+
     const passwordInput = useRef();
     const currentPasswordInput = useRef();
 
@@ -23,6 +27,22 @@ export default function UpdatePasswordForm({ className = '' }) {
         password: '',
         password_confirmation: '',
     });
+
+    if (isOwner && ownerLocked) {
+        return (
+            <section className={className}>
+                <header>
+                    <h2 className="text-lg font-medium text-gray-900">
+                        Update Password
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-600">
+                        Owner password has already been set and cannot be
+                        changed again.
+                    </p>
+                </header>
+            </section>
+        );
+    }
 
     const updatePassword = (e) => {
         e.preventDefault();

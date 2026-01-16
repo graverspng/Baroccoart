@@ -1,5 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
+import OwnerPasswordModal from '@/Components/OwnerPasswordModal';
 
 export default function ServiceDetail({ service }) {
     const { auth } = usePage().props;
@@ -116,6 +117,7 @@ export default function ServiceDetail({ service }) {
 
     return (
         <>
+            <OwnerPasswordModal />
             <Head title={service.label} />
             <div className="min-h-screen bg-[#050505] text-white">
                 <div className="mx-auto flex max-w-6xl flex-col px-6 pb-16 md:pb-24">
