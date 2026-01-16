@@ -48,6 +48,11 @@ export default function ServiceDetail({ service }) {
         return [...list, ...previewUploads];
     }, [data.images, previewUploads, heroPreview]);
 
+    const editingImages = useMemo(
+        () => [ ...(data.images || []), ...previewUploads ],
+        [data.images, previewUploads],
+    );
+
     const submit = () => {
         patch(route('service.update', service.slug), {
             preserveScroll: true,
@@ -79,16 +84,17 @@ export default function ServiceDetail({ service }) {
             setData('hero_file', null);
         }
 
-        setData(
-            'images',
-            (data.images || []).filter((img) => img !== url && !url.startsWith('blob:')),
-        );
+        setData('images', (data.images || []).filter((img) => img !== url));
 
-        setPreviewUploads((prev) => prev.filter((img) => img !== url));
-
-        if (url.startsWith('blob:')) {
-            setData('uploadFiles', []);
-        }
+        setPreviewUploads((prev) => {
+            const idx = prev.indexOf(url);
+            if (idx !== -1) {
+                setData('uploadFiles', (files) =>
+                    (files || []).filter((_, fileIdx) => fileIdx !== idx),
+                );
+            }
+            return prev.filter((img) => img !== url);
+        });
     };
 
     const handleFileSelect = (files) => {
@@ -288,7 +294,7 @@ export default function ServiceDetail({ service }) {
                                     Papildu attēli (URL)
                                 </label>
                                 <div className="flex flex-wrap gap-3">
-                                    {(data.images || []).map((url) => (
+                                    {editingImages.map((url) => (
                                         <div
                                             key={url}
                                             className="group relative w-32 overflow-hidden rounded-xl border border-white/15 bg-black/40"

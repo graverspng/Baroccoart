@@ -70,14 +70,27 @@ class ServiceController extends Controller
 
         $service = Service::where('slug', $slug)->firstOrFail();
 
+        $urlOrStoragePath = function (string $attribute, mixed $value, callable $fail) {
+            if ($value === null || $value === '') {
+                return;
+            }
+
+            $isHttpUrl = filter_var($value, FILTER_VALIDATE_URL) !== false;
+            $isStoragePath = str_starts_with($value, '/storage/');
+
+            if (! $isHttpUrl && ! $isStoragePath) {
+                $fail('The '.$attribute.' must be a valid URL or storage path.');
+            }
+        };
+
         $validated = $request->validate([
             'label' => ['required', 'string', 'max:255'],
             'heading' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
-            'hero_image' => ['nullable', 'url'],
+            'hero_image' => ['nullable', $urlOrStoragePath],
             'hero_file' => ['nullable', 'image', 'max:5120'],
             'images' => ['array'],
-            'images.*' => ['url'],
+            'images.*' => ['nullable', $urlOrStoragePath],
             'uploadFiles' => ['array'],
             'uploadFiles.*' => ['nullable', 'image', 'max:5120'],
         ]);
