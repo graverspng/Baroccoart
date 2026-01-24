@@ -2,6 +2,50 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 import OwnerPasswordModal from '@/Components/OwnerPasswordModal';
 
+const layoutOptions = [
+    {
+        value: 'grid',
+        label: 'Režģis',
+        description: 'Vienmērīgs tīkls',
+        icon: (
+            <div className="grid grid-cols-2 gap-1">
+                <span className="h-2 w-3 rounded-sm bg-white/70" />
+                <span className="h-2 w-3 rounded-sm bg-white/70" />
+                <span className="h-2 w-3 rounded-sm bg-white/70" />
+                <span className="h-2 w-3 rounded-sm bg-white/70" />
+            </div>
+        ),
+    },
+    {
+        value: 'masonry',
+        label: 'Mozaīka',
+        description: 'Dažādi izmēri',
+        icon: (
+            <div className="flex h-5 w-12 gap-1">
+                <span className="h-full w-5 rounded-sm bg-white/70" />
+                <span className="flex flex-1 flex-col gap-1">
+                    <span className="flex-1 rounded-sm bg-white/70" />
+                    <span className="flex-1 rounded-sm bg-white/70" />
+                </span>
+            </div>
+        ),
+    },
+    {
+        value: 'featured',
+        label: 'Izceltā',
+        description: 'Viens foto dominē',
+        icon: (
+            <div className="flex h-5 w-12 flex-col gap-1">
+                <span className="h-2 rounded-sm bg-white/70" />
+                <span className="flex flex-1 gap-1">
+                    <span className="flex-1 rounded-sm bg-white/70" />
+                    <span className="flex-1 rounded-sm bg-white/70" />
+                </span>
+            </div>
+        ),
+    },
+];
+
 export default function ServiceDetail({ service }) {
     const { auth } = usePage().props;
     const isOwner = auth?.user?.is_owner;
@@ -20,6 +64,7 @@ export default function ServiceDetail({ service }) {
         heading: service.heading,
         body: Array.isArray(service.body) ? service.body.join('\n') : service.body || '',
         hero_image: service.hero_image || '',
+        gallery_layout: service.gallery_layout || 'grid',
         images: Array.isArray(service.images) ? [...service.images] : [],
         newImage: '',
         uploadFiles: [],
@@ -53,6 +98,10 @@ export default function ServiceDetail({ service }) {
         () => [ ...(data.images || []), ...previewUploads ],
         [data.images, previewUploads],
     );
+    const galleryLayout = data.gallery_layout || 'grid';
+    const galleryImages = data.images || [];
+    const galleryCardClass =
+        'overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl';
 
     const submit = () => {
         patch(route('service.update', service.slug), {
@@ -113,6 +162,77 @@ export default function ServiceDetail({ service }) {
         const file = files[0];
         setData('hero_file', file);
         setHeroPreview(URL.createObjectURL(file));
+    };
+
+    const renderGallery = () => {
+        if (!galleryImages.length) return null;
+
+        if (galleryLayout === 'featured') {
+            const [first, ...rest] = galleryImages;
+            return (
+                <section className="mt-10 space-y-6">
+                    <div className={galleryCardClass}>
+                        <img
+                            src={first}
+                            alt=""
+                            className="aspect-[16/9] w-full object-cover"
+                        />
+                    </div>
+                    {rest.length > 0 && (
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            {rest.map((url) => (
+                                <div key={url} className={galleryCardClass}>
+                                    <img
+                                        src={url}
+                                        alt=""
+                                        className="aspect-[4/3] w-full object-cover"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
+            );
+        }
+
+        if (galleryLayout === 'masonry') {
+            return (
+                <section className="mt-10 grid auto-rows-[180px] grid-flow-dense grid-cols-1 gap-6 sm:auto-rows-[200px] sm:grid-cols-2 lg:grid-cols-3">
+                    {galleryImages.map((url, index) => {
+                        const isLarge = index % 6 === 0;
+                        const isTall = index % 6 === 3;
+                        return (
+                            <div
+                                key={url}
+                                className={`${galleryCardClass} ${
+                                    isLarge ? 'sm:row-span-2 lg:col-span-2' : ''
+                                } ${isTall ? 'sm:row-span-2' : ''}`}
+                            >
+                                <img
+                                    src={url}
+                                    alt=""
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
+                        );
+                    })}
+                </section>
+            );
+        }
+
+        return (
+            <section className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {galleryImages.map((url) => (
+                    <div key={url} className={galleryCardClass}>
+                        <img
+                            src={url}
+                            alt=""
+                            className="aspect-[4/3] w-full object-cover"
+                        />
+                    </div>
+                ))}
+            </section>
+        );
     };
 
     return (
@@ -348,6 +468,42 @@ export default function ServiceDetail({ service }) {
                                 </div>
                             </div>
 
+                            <div className="space-y-2">
+                                <p className="text-xs uppercase tracking-[0.2em] text-white/60">
+                                    Foto izkārtojums
+                                </p>
+                                <div className="grid gap-3 sm:grid-cols-3">
+                                    {layoutOptions.map((option) => {
+                                        const isActive = data.gallery_layout === option.value;
+                                        return (
+                                            <button
+                                                key={option.value}
+                                                type="button"
+                                                onClick={() =>
+                                                    setData('gallery_layout', option.value)
+                                                }
+                                                aria-pressed={isActive}
+                                                className={`group flex h-full flex-col gap-2 rounded-2xl border p-4 text-left transition ${
+                                                    isActive
+                                                        ? 'border-white bg-white/10'
+                                                        : 'border-white/15 bg-black/40 hover:border-white/40'
+                                                }`}
+                                            >
+                                                <span className="flex h-10 w-12 items-center justify-center rounded-lg border border-white/10 bg-black/40">
+                                                    {option.icon}
+                                                </span>
+                                                <span className="text-sm font-semibold">
+                                                    {option.label}
+                                                </span>
+                                                <span className="text-xs text-white/60">
+                                                    {option.description}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
                             <div className="flex gap-3">
                                 <button
                                     type="button"
@@ -368,22 +524,7 @@ export default function ServiceDetail({ service }) {
                         </section>
                     )}
 
-                    {!editing && data.images && data.images.length > 0 && (
-                        <section className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            {data.images.map((url) => (
-                                <div
-                                    key={url}
-                                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl"
-                                >
-                                    <img
-                                        src={url}
-                                        alt=""
-                                        className="aspect-[4/3] w-full object-cover"
-                                    />
-                                </div>
-                            ))}
-                        </section>
-                    )}
+                    {!editing && renderGallery()}
 
                     <div className="mt-10 flex flex-wrap gap-3">
                         <Link

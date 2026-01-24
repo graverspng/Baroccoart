@@ -43,6 +43,7 @@ class ServiceController extends Controller
                 'heading' => $service->heading,
                 'body' => $service->body,
                 'hero_image' => $service->hero_image,
+                'gallery_layout' => $service->gallery_layout ?? 'grid',
                 'images' => $service->images->pluck('url')->values(),
             ],
         ]);
@@ -89,6 +90,7 @@ class ServiceController extends Controller
             'body' => ['required', 'string'],
             'hero_image' => ['nullable', $urlOrStoragePath],
             'hero_file' => ['nullable', 'image', 'max:5120'],
+            'gallery_layout' => ['nullable', 'string', 'in:grid,masonry,featured'],
             'images' => ['array'],
             'images.*' => ['nullable', $urlOrStoragePath],
             'uploadFiles' => ['array'],
@@ -129,6 +131,7 @@ class ServiceController extends Controller
                 'heading' => $validated['heading'],
                 'body' => $bodyLines,
                 'hero_image' => $heroImage,
+                'gallery_layout' => $validated['gallery_layout'] ?? $service->gallery_layout ?? 'grid',
             ]);
 
             if ($images !== null) {

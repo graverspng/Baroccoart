@@ -80,7 +80,7 @@ export default function Welcome({ auth, services = [] }) {
                             <Link
                                 key={item.slug}
                                 href={route('service.detail', item.slug)}
-                                className="group slide-pop"
+                                className="group block slide-pop"
                             >
                                 <figure className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl transition duration-300 hover:-translate-y-1 hover:border-white/30 fade-in-up">
                                     <img
@@ -125,7 +125,10 @@ export default function Welcome({ auth, services = [] }) {
                             </p>
                         </div>
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                            <Link
+                                href={route('services')}
+                                className="group block rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                            >
                                 <p className="text-xl font-semibold">
                                     Dzīvojamās mājas
                                 </p>
@@ -133,8 +136,11 @@ export default function Welcome({ auth, services = [] }) {
                                     Individuāli risinājumi ar ērtām plānojuma
                                     līnijām un plašu stiklojumu.
                                 </p>
-                            </div>
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                            </Link>
+                            <Link
+                                href={route('services')}
+                                className="group block rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                            >
                                 <p className="text-xl font-semibold">
                                     Industriālie objekti
                                 </p>
@@ -142,8 +148,11 @@ export default function Welcome({ auth, services = [] }) {
                                     Noliktavas, ražotnes un angāri ar
                                     optimizētu dienasgaismu un loģistiku.
                                 </p>
-                            </div>
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                            </Link>
+                            <Link
+                                href={route('services')}
+                                className="group block rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                            >
                                 <p className="text-xl font-semibold">
                                     Interjera dizains
                                 </p>
@@ -151,8 +160,11 @@ export default function Welcome({ auth, services = [] }) {
                                     Minimālisma valoda, kas izceļ materiālu
                                     faktūru un gaismu.
                                 </p>
-                            </div>
-                            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                            </Link>
+                            <Link
+                                href={route('services')}
+                                className="group block rounded-2xl border border-white/10 bg-black/30 p-5 transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                            >
                                 <p className="text-xl font-semibold">
                                     Konsultācijas
                                 </p>
@@ -160,7 +172,7 @@ export default function Welcome({ auth, services = [] }) {
                                     Projekta stratēģija, budžeta un materiālu
                                     izvēles sesijas.
                                 </p>
-                            </div>
+                            </Link>
                         </div>
                     </section>
 

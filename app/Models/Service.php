@@ -14,6 +14,7 @@ class Service extends Model
         'heading',
         'body',
         'hero_image',
+        'gallery_layout',
     ];
 
     protected $casts = [
