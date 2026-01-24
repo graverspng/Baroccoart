@@ -3,11 +3,21 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SiteSettingController;
 use App\Models\Service;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $homeLayout = SiteSetting::where('key', 'home_layout')->value('value') ?: 'grid';
+    if ($homeLayout === 'masonry') {
+        $homeLayout = 'split';
+    }
+    if (! in_array($homeLayout, ['grid', 'split', 'featured', 'stacked'], true)) {
+        $homeLayout = 'grid';
+    }
+
     $services = Service::orderBy('id')
         ->take(4)
         ->get()
@@ -25,6 +35,7 @@ Route::get('/', function () {
 
     return Inertia::render('Welcome', [
         'services' => $services,
+        'homeLayout' => $homeLayout,
     ]);
 });
 
@@ -43,6 +54,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::patch('/contact', [ContactController::class, 'update'])->name('contact.update');
+    Route::patch('/home-layout', [SiteSettingController::class, 'updateHomeLayout'])
+        ->name('home.layout.update');
 });
 
 require __DIR__.'/auth.php';
