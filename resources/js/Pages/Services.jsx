@@ -1,8 +1,7 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import SiteHeader from '@/Components/SiteHeader';
 
 export default function Services({ services = [] }) {
-    const { auth } = usePage().props;
-
     const renderLine = (line) => {
         if (!line) return '';
         const parts = line.split(/[-–]/);
@@ -23,49 +22,7 @@ export default function Services({ services = [] }) {
             <Head title="Pakalpojumi" />
             <div className="min-h-screen bg-[#050505] text-white">
                 <div className="mx-auto flex max-w-6xl flex-col px-6 pb-16 md:pb-24">
-                    <header className="flex items-center justify-between py-6">
-                        <Link
-                            href="/"
-                            className="text-lg font-semibold tracking-tight hover:text-white"
-                        >
-                            Barocco Art
-                        </Link>
-                        <nav className="flex items-center gap-4 text-sm text-white/80 md:gap-8">
-                            <Link href={`${route('services')}#celtnieciba`} className="transition hover:text-white">
-                                Celtniecība
-                            </Link>
-                            <Link href={`${route('services')}#projektesana`} className="transition hover:text-white">
-                                Projektēšana
-                            </Link>
-                            <Link href={`${route('services')}#interjera-dizains`} className="transition hover:text-white">
-                                Interjera dizains
-                            </Link>
-                            <Link href={`${route('services')}#mebeles`} className="transition hover:text-white">
-                                Mēbeles
-                            </Link>
-                            <Link href={route('contact')} className="transition hover:text-white">
-                                Kontakti
-                            </Link>
-                            {!auth?.user && (
-                                <Link
-                                    href={route('login')}
-                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                                >
-                                    Owner Login
-                                </Link>
-                            )}
-                            {auth?.user && (
-                                <Link
-                                    href={route('logout')}
-                                    method="post"
-                                    as="button"
-                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                                >
-                                    Izrakstīties
-                                </Link>
-                            )}
-                        </nav>
-                    </header>
+                    <SiteHeader />
 
                     <section className="py-6 text-center md:py-10">
                         <p className="text-sm uppercase tracking-[0.2em] text-white/60 fade-in-up">

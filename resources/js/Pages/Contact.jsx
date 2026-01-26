@@ -1,5 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
+import SiteHeader from '@/Components/SiteHeader';
 
 const placeholderBg = [
     'from-amber-500/70 via-pink-500/70 to-purple-500/70',
@@ -81,64 +82,7 @@ export default function Contact({ contacts = [] }) {
             <Head title="Kontakti" />
             <div className="min-h-screen bg-[#050505] text-white">
                 <div className="mx-auto flex max-w-6xl flex-col px-6 pb-16 md:pb-24">
-                    <header className="flex items-center justify-between py-6">
-                        <Link
-                            href="/"
-                            className="text-lg font-semibold tracking-tight hover:text-white"
-                        >
-                            Barocco Art
-                        </Link>
-                        <nav className="flex items-center gap-4 text-sm text-white/80 md:gap-8">
-                            <Link
-                                href={`${route('services')}#celtnieciba`}
-                                className="transition hover:text-white"
-                            >
-                                Celtniecība
-                            </Link>
-                            <Link
-                                href={`${route('services')}#projektesana`}
-                                className="transition hover:text-white"
-                            >
-                                Projektēšana
-                            </Link>
-                            <Link
-                                href={`${route('services')}#interjera-dizains`}
-                                className="transition hover:text-white"
-                            >
-                                Interjera dizains
-                            </Link>
-                            <Link
-                                href={`${route('services')}#mebeles`}
-                                className="transition hover:text-white"
-                            >
-                                Mēbeles
-                            </Link>
-                            <Link
-                                href={route('contact')}
-                                className="transition hover:text-white"
-                            >
-                                Kontakti
-                            </Link>
-                            {!usePage().props.auth?.user && (
-                                <Link
-                                    href={route('login')}
-                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                                >
-                                    Owner Login
-                                </Link>
-                            )}
-                            {usePage().props.auth?.user && (
-                                <Link
-                                    href={route('logout')}
-                                    method="post"
-                                    as="button"
-                                    className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                                >
-                                    Izrakstīties
-                                </Link>
-                            )}
-                        </nav>
-                    </header>
+                    <SiteHeader />
 
                     <section className="py-6 text-center md:py-10 slide-pop" style={{ animationDelay: '0.05s' }}>
                         <p className="text-sm uppercase tracking-[0.2em] text-white/60 fade-in-up">
@@ -170,7 +114,7 @@ export default function Contact({ contacts = [] }) {
                     <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
                         {cards.map((item, index) => (
                             <div
-                                key={item.title}
+                                key={item.id ?? item.slug ?? item.title}
                                 className="flex h-full flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur slide-pop"
                                 style={{ animationDelay: `${0.1 + index * 0.08}s` }}
                             >
