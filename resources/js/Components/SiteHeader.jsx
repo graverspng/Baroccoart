@@ -9,6 +9,7 @@ export default function SiteHeader({
 }) {
     const { auth } = usePage().props;
     const [menuOpen, setMenuOpen] = useState(false);
+    const isOwner = auth?.user?.is_owner;
     const navLinks = [
         { href: `${route('services')}#celtnieciba`, label: 'Celtniecība' },
         { href: `${route('services')}#projektesana`, label: 'Projektēšana' },
@@ -16,11 +17,14 @@ export default function SiteHeader({
         { href: `${route('services')}#mebeles`, label: 'Mēbeles' },
         { href: route('contact'), label: 'Kontakti' },
     ];
+    const ownerLinks = isOwner
+        ? [{ href: route('owner.guide'), label: 'Īpašnieka ceļvedis' }]
+        : [];
 
     const closeMenu = () => setMenuOpen(false);
 
     const renderNavLinks = (linkClassName) =>
-        navLinks.map((item) => (
+        [...navLinks, ...ownerLinks].map((item) => (
             <Link
                 key={item.label}
                 href={item.href}

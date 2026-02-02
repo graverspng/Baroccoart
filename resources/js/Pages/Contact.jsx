@@ -27,6 +27,11 @@ export default function Contact({ contacts = [] }) {
     });
 
     const cards = useMemo(() => data.contacts || [], [data.contacts]);
+    const gridColsClass = (() => {
+        if (cards.length <= 1) return 'md:grid-cols-1';
+        if (cards.length === 2) return 'md:grid-cols-2';
+        return 'md:grid-cols-3';
+    })();
 
     const updateField = (id, key, value) => {
         setData('contacts', cards.map((c) => (c.id === id ? { ...c, [key]: value } : c)));
@@ -111,7 +116,7 @@ export default function Contact({ contacts = [] }) {
                         )}
                     </section>
 
-                    <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <section className={`grid grid-cols-1 gap-6 ${gridColsClass}`}>
                         {cards.map((item, index) => (
                             <div
                                 key={item.id ?? item.slug ?? item.title}

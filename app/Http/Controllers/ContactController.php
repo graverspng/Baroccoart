@@ -11,7 +11,10 @@ class ContactController extends Controller
 {
     public function index(Request $request)
     {
-        $contacts = Contact::orderBy('id')->get()->map(function (Contact $contact) {
+        $contacts = Contact::where('slug', '!=', 'interjers-dizains')
+            ->orderBy('id')
+            ->get()
+            ->map(function (Contact $contact) {
             return [
                 'id' => $contact->id,
                 'slug' => $contact->slug,

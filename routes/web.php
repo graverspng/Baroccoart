@@ -56,6 +56,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/contact', [ContactController::class, 'update'])->name('contact.update');
     Route::patch('/home-layout', [SiteSettingController::class, 'updateHomeLayout'])
         ->name('home.layout.update');
+    Route::get('/owner-guide', function () {
+        abort_unless(auth()->user()?->is_owner, 403);
+
+        return Inertia::render('OwnerGuide');
+    })->name('owner.guide');
 });
 
 require __DIR__.'/auth.php';
