@@ -44,17 +44,17 @@ export default function SiteHeader({
                     className="text-lg font-semibold tracking-tight hover:text-white"
                 >
                     Barocco Art
-                </Link>
-                <nav className="hidden items-center gap-4 text-sm text-white/80 md:flex md:gap-8">
+                    </Link>
+                <nav className="hidden items-center gap-6 md:flex">
                     {renderNavLinks('transition hover:text-white')}
                     {showAuth && !auth?.user && (
                         <Link
                             href={route('login')}
-                            className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                        >
-                            Owner Login
+                            >
+                            
                         </Link>
                     )}
+                    
                     {showAuth && auth?.user && (
                         <Link
                             href={route('logout')}
@@ -91,12 +91,7 @@ export default function SiteHeader({
                 <nav className="flex flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/80">
                     {renderNavLinks('transition hover:text-white')}
                     {showAuth && !auth?.user && (
-                        <Link
-                            href={route('login')}
-                            onClick={closeMenu}
-                            className="rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition hover:border-white hover:bg-white/10"
-                        >
-                            Owner Login
+                        <Link>
                         </Link>
                     )}
                     {showAuth && auth?.user && (

@@ -353,7 +353,7 @@ export default function Welcome({ auth, services = [], homeLayout }) {
                     </section>
 
                     <footer className="mt-10 text-xs text-white/50 fade-in-up" style={{ animationDelay: '0.35s' }}>
-                        © 2025 Barocco Art.
+                        <a href="/login">© 2025 Barocco Art.</a>
                     </footer>
                 </div>
             </div>
